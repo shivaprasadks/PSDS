@@ -1,48 +1,51 @@
 (function() {
   console.clear();
-
   var checkBraces = (myString) => {
-    let bracesTracker = {
-        "simple": 0,
-        "curly": 0,
-        "box": 0
-      },
-      count = 0;
+    let checkStack = bracesType => {
+      let topItem = bracesTracker.pop();
+      if (typeof topItem === 'undefined' ||
+        topItem !== bracesType) {
+        return false
+      } else return true;
+    }
+
+    let bracesTracker = [];
 
     for (let i = 0; i < myString.length; i++) {
       switch (myString.charAt(i)) {
         case "(":
-          bracesTracker['simple']++;
+          bracesTracker.push('simple');
           break;
         case ")":
-          bracesTracker['simple']--;
-          break;
+          if (checkStack('simple')) break;
+          else return false;
+
         case "[":
-          bracesTracker['box']++;
+          bracesTracker.push('box');
           break;
         case "]":
-          bracesTracker['box']--;
-          break;
+          if (checkStack('box')) break;
+          else return false;
         case "{":
-          bracesTracker['curly']++;
+          bracesTracker.push('curly');
           break;
         case "}":
-          bracesTracker['curly']--;
-          break;
+          if (checkStack('curly')) break;
+          else return false;
         default:
           break;
       }
     }
 
-    for (item in bracesTracker) {
-      count += bracesTracker[item];
-    }
-    if (count != 0) return "incomplete string FALSE";
-    else return "complete string TRUE";
+    if(bracesTracker.length != 0) { 
+    	return false ;
+    };
+    return true;
   }
 
+
   var main = () => {
-    let someString = "([])";
+    let someString = "()";
     console.log(checkBraces(someString));
   }
 
